@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+```
+<meta
+    name="description"
+    content="TashLand — Telegram-сообщество, встречи и сходки в Ташкенте."
+>
+
+<meta
+    name="theme-color"
+    content="#050505"
+>
+
+<title>TashLand</title>
+
+<!-- Основные стили -->
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+
+<!-- Leaflet CSS -->
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    crossorigin=""
+>
+```
+
+</head>
+
+<body>
+
+```
+<!-- =========================================
+     HEADER
+========================================== -->
+
+<header class="header">
+
+    <a
+        href="#home"
+        class="logo"
+        aria-label="TashLand — главная"
+    >
+        Tash<span>Land</span>
+    </a>
+
+    <nav
+        class="nav"
+        aria-label="Основная навигация"
+    >
+        <a href="#home">
+            Главная
+        </a>
+
+        <a href="#about">
+            О нас
+        </a>
+
+        <a href="#meetups">
+            Сходки
+        </a>
+
+        <a href="#contacts">
+            Контакты
+        </a>
+    </nav>
+
+    <a
+        href="https://t.me/TashLand0112"
+        class="telegram-btn"
+        target="_blank"
+        rel="noopener noreferrer"
+    >
+        Telegram
+    </a>
+
+</header>
+
+
+<!-- =========================================
+     MAIN
+========================================== -->
+
+<main>
+
+    <!-- =====================================
+         HERO
+    ====================================== -->
+
+    <section
+        class="hero"
+        id="home"
+    >
+
+        <div class="hero-content">
+
+            <p class="subtitle">
+                TELEGRAM COMMUNITY
+            </p>
+
+            <h1>
+                Добро пожаловать<br>
+                в <span>TashLand</span>
+            </h1>
+
+            <p class="description">
+                Наше пространство, наше сообщество,
+                наша атмосфера.
+            </p>
+
+            <a
+                href="https://t.me/TashLand0112"
+                class="main-btn"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Войти в Telegram →
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================
+         ABOUT
+    ====================================== -->
+
+    <section
+        class="about"
+        id="about"
+    >
+
+        <p class="section-label">
+            ABOUT US
+        </p>
+
+        <h2>
+            Что такое TashLand?
+        </h2>
+
+        <p>
+            TashLand — это Telegram-сообщество,
+            созданное для общения, знакомств,
+            интересных событий и хорошей атмосферы.
+        </p>
+
+    </section>
+
+
+    <!-- =====================================
+         MEETUPS
+    ====================================== -->
+
+    <section
+        class="meetups"
+        id="meetups"
+    >
+
+        <div class="meetups-header">
+
+            <div>
+
+                <p class="section-label">
+                    MEETUPS
+                </p>
+
+                <h2>
+                    Ближайшие<br>
+                    <span>сходки</span>
+                </h2>
+
+            </div>
+
+            <button
+                class="add-meetup-btn"
+                id="openMeetupModal"
+                type="button"
+            >
+                + Запланировать
+            </button>
+
+        </div>
+
+
+        <!--
+            JS загружает сюда сходки
+            из Supabase
+        -->
+
+        <div
+            class="meetups-list"
+            id="meetupsList"
+            aria-live="polite"
+        ></div>
+
+    </section>
+
+
+    <!-- =====================================
+         CREATE MEETUP MODAL
+    ====================================== -->
+
+    <div
+        class="modal"
+        id="meetupModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="modal-overlay"
+            id="closeMeetupModal"
+        ></div>
+
+
+        <div
+            class="modal-window"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="meetupModalTitle"
+        >
+
+            <button
+                class="modal-close"
+                id="modalCloseButton"
+                type="button"
+                aria-label="Закрыть окно"
+            >
+                ×
+            </button>
+
+
+            <p class="section-label">
+                NEW MEETUP
+            </p>
+
+
+            <h3 id="meetupModalTitle">
+                Запланировать<br>
+                <span>сходку</span>
+            </h3>
+
+
+            <form id="meetupForm">
+
+                <!-- НАЗВАНИЕ -->
+
+                <div class="input-group">
+
+                    <label for="meetupTitle">
+                        Название
+                    </label>
+
+                    <input
+                        id="meetupTitle"
+                        name="title"
+                        type="text"
+                        placeholder="Например: TashLand Night"
+                        maxlength="80"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ДАТА + ВРЕМЯ -->
+
+                <div class="form-row">
+
+                    <div class="input-group">
+
+                        <label for="meetupDate">
+                            Дата
+                        </label>
+
+                        <input
+                            id="meetupDate"
+                            name="date"
+                            type="date"
+                            required
+                        >
+
+                    </div>
+
+
+                    <div class="input-group">
+
+                        <label for="meetupTime">
+                            Время
+                        </label>
+
+                        <input
+                            id="meetupTime"
+                            name="time"
+                            type="time"
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <!-- МЕСТО -->
+
+                <div class="input-group">
+
+                    <label for="meetupPlace">
+                        Место
+                    </label>
+
+                    <input
+                        id="meetupPlace"
+                        name="place"
+                        type="text"
+                        placeholder="Например: Magic City"
+                        maxlength="120"
+                        autocomplete="off"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- ОПИСАНИЕ -->
+
+                <div class="input-group">
+
+                    <label for="meetupDescription">
+                        Описание
+                    </label>
+
+                    <textarea
+                        id="meetupDescription"
+                        name="description"
+                        placeholder="Что будем делать?"
+                        rows="4"
+                        maxlength="500"
+                    ></textarea>
+
+                </div>
+
+
+                <!-- СОЗДАТЬ -->
+
+                <button
+                    class="main-btn meetup-submit"
+                    type="submit"
+                >
+                    Создать сходку →
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         MAP MODAL
+    ====================================== -->
+
+    <div
+        class="map-modal"
+        id="mapModal"
+        aria-hidden="true"
+    >
+
+        <div
+            class="map-overlay"
+            id="mapOverlay"
+        ></div>
+
+
+        <div
+            class="map-window"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="mapMeetupTitle"
+        >
+
+            <button
+                class="map-close"
+                id="mapClose"
+                type="button"
+                aria-label="Закрыть карту"
+            >
+                ×
+            </button>
+
+
+            <!-- MAP HEADER -->
+
+            <div class="map-header">
+
+                <p class="section-label">
+                    TASHLAND MEETUP
+                </p>
+
+                <h3 id="mapMeetupTitle">
+                    Сходка
+                </h3>
+
+                <p>
+                    Информация о месте встречи
+                </p>
+
+            </div>
+
+
+            <!-- MAP -->
+
+            <div
+                class="map-container"
+            >
+
+                <div
+                    id="meetupMap"
+                    class="map-iframe"
+                ></div>
+
+            </div>
+
+
+            <!-- MAP INFO -->
+
+            <div class="map-info">
+
+                <div class="map-details">
+
+                    <span id="mapMeetupDate">
+                        📅 —
+                    </span>
+
+                    <span id="mapMeetupTime">
+                        🕐 —
+                    </span>
+
+                    <span id="mapMeetupPlace">
+                        📍 —
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================
+         CONTACTS
+    ====================================== -->
+
+    <section
+        class="contacts"
+        id="contacts"
+    >
+
+        <p class="section-label">
+            CONTACTS
+        </p>
+
+        <h2>
+            Связаться с нами
+        </h2>
+
+        <a
+            href="https://t.me/TashLand0112"
+            class="main-btn"
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            Наш Telegram →
+        </a>
+
+    </section>
+
+</main>
+
+
+<!-- =========================================
+     FOOTER
+========================================== -->
+
+<footer>
+
+    <p>
+        © 2026 TashLand
+    </p>
+
+</footer>
+
+
+<!-- =========================================
+     LEAFLET JS
+========================================== -->
+
+<script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    crossorigin=""
+></script>
+
+
+<!-- =========================================
+     SUPABASE JS
+========================================== -->
+
+<script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+></script>
+
+
+<!-- =========================================
+     TASHLAND JS
+========================================== -->
+
+<script src="script.js"></script>
+```
+
+</body>
+
+</html>
+```
+
+Теперь связка получается такая:
+
+**`index.html` → `style.css` → `script.js` → Supabase + Leaflet.**
+
+Особенно важно, что я привёл карту к структуре `.map-header → .map-container → #meetupMap`, которую использует твой CSS и исправленный JS.
